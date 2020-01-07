@@ -1,48 +1,74 @@
 <template>
-  <div>
-    <div id="app">
-      <div class="container">
-        <div class="close"><span class="iconfont iconicon-test"></span></div>
-        <div class="logo"><span class="iconfont iconnew"></span></div>
-        <div class="inputs">
-          <cm_textBox
-            placeholder="用户名/邮箱"
-            v-model="username"
-            :rules="/^(\d{5,6})$|^(1\d{10})$/"
-          ></cm_textBox>
-          <cm_textBox
-            type="password"
-            placeholder="密码"
-            :rules="/^\S{3,16}$/"
-          ></cm_textBox>
-        </div>
-        <p class="tips">
-          没有账号？
-          <a href="#/login" class="">去注册</a>
-        </p>
-        <cm_button @click="login">登录</cm_button>
+  <div id="app">
+    <div class="container">
+      <div class="close">
+        <span class="iconfont iconicon-test"></span>
       </div>
+      <div class="logo">
+        <span class="iconfont iconnew"></span>
+      </div>
+      <div class="inputs">
+        <DE_textBox
+          placeholder="用户名/手机"
+          v-model="users.username"
+          :rules="/^(\d{5,6})$|^(1\d{10})$/"
+          msg="用户名/手机 格式错误"
+        ></DE_textBox>
+        <DE_textBox
+          type="password"
+          placeholder="密码"
+          v-model="users.password"
+          :rules="/^\S{3,16}$/"
+          msg="密码格式错误"
+        ></DE_textBox>
+      </div>
+      <p class="tips">
+        没有账号？
+        <router-link to="/register">去注册</router-link>
+      </p>
+      <DE_btn @click="login">登录</DE_btn>
     </div>
   </div>
 </template>
 <script>
 import button from "@/components/button";
 import textBox from "@/components/textBox";
+import { login } from "@/apis/user.js";
 export default {
   data() {
     return {
-      username: "",
-      password: ""
+      users: {
+        username: "",
+        password: ""
+      }
     };
   },
   methods: {
-    login: function() {
-      console.log(111);
+    // - 登录触发
+    login: async function() {
+      if (
+        /^(\d{5,6})$|^(1\d{10})$/.test(this.users.username) &&
+        /^\S{3,16}$/.test(this.users.password)
+      ) {
+        let res = await login(this.users);
+        if (res.data.message === "用户不存在") {
+          this.$toast.fail(res.data.message);
+        } else {
+          localStorage.setItem("headlines_41_token", res.data.data.token);
+          localStorage.setItem(
+            "headlines_41_userInfo",
+            JSON.stringify(res.data.data.user)
+          );
+          this.$router.push({ path: `/personal/${res.data.data.user.id}` });
+        }
+      } else {
+        this.$toast.fail("用户数据输入不合法");
+      }
     }
   },
   components: {
-    cm_button: button,
-    cm_textBox: textBox
+    DE_textBox: textBox,
+    DE_btn: button
   }
 };
 </script>
