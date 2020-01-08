@@ -11,10 +11,19 @@ import {
   Uploader,
   Dialog,
   Field,
-  Picker
+  Picker,
+  Tab,
+  Tabs
 } from 'vant';
 Vue.use(Toast)
-  .use(Icon).use(NavBar).use(Uploader).use(Dialog).use(Field).use(Picker)
+  .use(Icon)
+  .use(NavBar)
+  .use(Uploader)
+  .use(Dialog)
+  .use(Field)
+  .use(Picker)
+  .use(Tab)
+  .use(Tabs)
 new Vue({
   router: router,
   render: h => h(App),
