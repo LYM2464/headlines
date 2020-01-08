@@ -13,7 +13,8 @@ import {
   Field,
   Picker,
   Tab,
-  Tabs
+  Tabs,
+  List
 } from 'vant';
 Vue.use(Toast)
   .use(Icon)
@@ -24,6 +25,7 @@ Vue.use(Toast)
   .use(Picker)
   .use(Tab)
   .use(Tabs)
+  .use(List)
 new Vue({
   router: router,
   render: h => h(App),
